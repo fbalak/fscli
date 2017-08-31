@@ -22,7 +22,6 @@ Command line interface for testing machine learning algorithms and feature selec
 
 
 * Free software: Apache Software License 2.0
-* Documentation: https://fscli.readthedocs.io.
 
 
 Features
