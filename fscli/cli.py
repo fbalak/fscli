@@ -2,17 +2,20 @@
 
 """Console script for fscli."""
 
+import sys
+import os
 from time import gmtime, strftime
 from sklearn.externals import joblib
-from fstester.machinelearning import machinelearning
+import machinelearning
 import click
 # Classification
-from fstester.coefbugrepair import coefbugrepair
+import coefbugrepair
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB, MultinomialNB
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis,QuadraticDiscriminantAnalysis 
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis,\
+    QuadraticDiscriminantAnalysis
 # Clustering
 from sklearn import cluster
 from sklearn import mixture
@@ -23,14 +26,16 @@ np.set_printoptions(threshold=np.inf)
 @click.command()
 @click.argument('task')
 @click.argument('dataset')
-@click.option('--featureselection', '-f', help='Feature selection algorithm.')
+@click.option('--target_attribute', '-a', help='Target attribute in dataset.')
+@click.option('--fs_task', '-f', help='Feature selection algorithm.')
 @click.option('--test', '-t',
-    help='Test dataset - when not set, cross validation is used.')
+              help='Test dataset - when not set, cross validation is used.')
 @click.option('--model', '-m', help='Trained model.')
-@click.option('--save', '-s', help='Path where to save trained model.')
-def main(args=None):
+@click.option('--save_folder', '-s',
+              help='Path to folder where to save trained model.')
+def main(task, dataset, target_attribute, fs_task, test, model, save_folder):
     """Console script for fscli."""
-    if model == None:
+    if model is None:
         # Classification
         if task == "RandomForestClassifier":
             tasktype = "classification"
@@ -52,10 +57,15 @@ def main(args=None):
             model = GaussianNB()
         elif task == "MultinomialNB":
             # For demonstration on text data
-            # https://classes.soe.ucsc.edu/cmps290c/Spring12/lect/14/CEAS2006_corrected-naiveBayesSpam.pdf
+            # https://classes.soe.ucsc.edu/cmps290c/Spring12/lect/14/\
+            # CEAS2006_corrected-naiveBayesSpam.pdf
             #
-            # The term Multinomial Naive Bayes simply lets us know that each p(fi|c) is a multinomial distribution, rather than some other distribution. This works well for data which can easily be turned into counts, such as word counts in text.
-            # http://stats.stackexchange.com/questions/33185/difference-between-naive-bayes-multinomial-naive-bayes
+            # The term Multinomial Naive Bayes simply lets us know that each
+            # p(fi|c) is a multinomial distribution, rather than some other
+            # distribution. This works well for data which can easily be
+            # turned into counts, such as word counts in text.
+            # http://stats.stackexchange.com/questions/33185/\
+            # difference-between-naive-bayes-multinomial-naive-bayes
             tasktype = "classification"
             model = MultinomialNB()
         elif task == "QDA":
@@ -87,24 +97,32 @@ def main(args=None):
             tasktype = "clustering"
             model = mixture.GMM(n_components=2, covariance_type='full')
 
-    if model !=None:
+    if model is not None:
         if tasktype == "classification":
-            results = machinelearning.classification(source,model,target,test,fs_task)
+            if target_attribute is None:
+                click.echo("For classification task have to be specified"
+                           "--target_attribute")
+                sys.exit(1)
+            results = machinelearning.classification(
+                dataset, model, target_attribute, test, fs_task)
         elif tasktype == "clustering":
-            results = machinelearning.clustering(source,model,target,test,fs_task)
+            results = machinelearning.clustering(
+                dataset, model, target_attribute, test, fs_task)
 
         click.echo("Results")
-        pprint.pprint(results["score"])
+        click.echo(results["score"])
 
-        if dump_folder != False:
-            if dump_folder != "":
-                directory = dump_folder
+        if save_folder is not False:
+            if save_folder != "":
+                directory = save_folder
             else:
-                directory = '../models/model'+str(strftime("%Y-%m-%d-%H-%M-%S", gmtime()))
+                directory = '../models/model'+str(
+                    strftime("%Y-%m-%d-%H-%M-%S", gmtime()))
             if not os.path.exists(directory):
                 os.makedirs(directory)
             joblib.dump(results["model"], directory+'/model.pkl')
-            click.echo("Dump file of model was created: " + directory+'/model.pkl')
+            click.echo(
+                "Dump file of model was created: " + directory+'/model.pkl')
 
         return results
 
