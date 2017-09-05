@@ -111,6 +111,11 @@ def main(task, dataset, target_attribute, fs_task, test, model, save_folder):
 
         click.echo("Results")
         click.echo(results["score"])
+        click.echo(results["metrics"])
+        if fs_task:
+            click.echo("feature selection: {}".format(fs_task))
+            click.echo("removed_features: {}".format(
+                results["removed_features"]))
 
         if save_folder:
             if save_folder != "":
