@@ -112,7 +112,7 @@ def main(task, dataset, target_attribute, fs_task, test, model, save_folder):
         click.echo("Results")
         click.echo(results["score"])
 
-        if save_folder is not False:
+        if save_folder:
             if save_folder != "":
                 directory = save_folder
             else:

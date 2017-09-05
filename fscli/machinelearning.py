@@ -57,7 +57,7 @@ def classification(source, model, target_att, test_source="", fs_task=False):
         # fitted model.
         cfr = featureselection.get_fs_model(cfr, fs_task, train, target)
 
-    if test_source is not False:
+    if test_source:
 
         # Numpy array with values from test_source path without feature names
         # and target values.
@@ -94,7 +94,7 @@ def classification(source, model, target_att, test_source="", fs_task=False):
                 mx.recall_score(target[test_idx], prediction, average="macro"))
             metrics["f_measure"].append(
                     mx.f1_score(target[test_idx], prediction, average="macro"))
-    results["score"] = cfr.score(test, test_target)
+    # results["score"] = cfr.score(test, test_target)
 
     if fs_task:
         original_features = features[:]
