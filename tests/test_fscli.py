@@ -4,12 +4,34 @@
 """Tests for `fscli` package."""
 
 import pytest
+import os.path
 
 from click.testing import CliRunner
 
 from fscli import fscli
 from fscli import cli
 
+
+@pytest.fixture
+def traindata():
+    """Returns training dataset used in tests."""
+    return os.path.join(os.path.realpath(__file__), "testdata", "traindata")
+
+@pytest.fixture
+def testdata():
+    """Returns testing dataset used in tests."""
+    return os.path.join(os.path.realpath(__file__), "testdata", "testdata")
+
+@pytest.fixture
+def target_attribute():
+    """Returns name of target attribute used in test datasets."""
+    return "Class"
+
+@pytest.mark.parametrize("task",
+                         ["RandomForestClassifier", "SVC", "MultinomialNB"])
+def test_classification(task, traindata, target_attribute, testdata):
+    """Calls cli with specified machine learning tasks."""
+    pass
 
 def test_command_line_interface():
     """Test the CLI."""

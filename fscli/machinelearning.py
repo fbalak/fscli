@@ -1,7 +1,7 @@
 from sklearn import metrics as mx
 from sklearn.model_selection import KFold
 import pandas as pd
-import featureselection
+from fscli import featureselection
 
 
 def classification(source, model, target_att, test_source="", fs_task=False):
