@@ -25,7 +25,7 @@ np.set_printoptions(threshold=np.inf)
 
 @click.command()
 @click.argument('task')
-@click.argument('dataset')
+@click.option('--dataset', '-d', help='Path to training dataset.')
 @click.option('--target_attribute', '-a', help='Target attribute in dataset.')
 @click.option('--fs_task', '-f', help='Feature selection algorithm.')
 @click.option('--test', '-t',
