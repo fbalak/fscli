@@ -37,6 +37,7 @@ def test_classification(task, traindata, target_attribute, testdata):
         '--dataset={}'.format(traindata),
         '--target_attribute={}'.format(target_attribute),
         '--test={}'.format(testdata)])
+    print(result.output)
     assert result.exit_code == 0
 
 @pytest.mark.parametrize("task",
@@ -53,6 +54,7 @@ def test_classification_with_fs(
         '--fs_task={}'.format(fs),
         '--target_attribute={}'.format(target_attribute),
         '--test={}'.format(testdata)])
+    print(result.output)
     assert result.exit_code == 0
 
 @pytest.mark.parametrize("task",
@@ -64,6 +66,7 @@ def test_classification_cv(task, traindata, target_attribute):
         task,
         '--dataset={}'.format(traindata),
         '--target_attribute={}'.format(target_attribute)])
+    print(result.output)
     assert result.exit_code == 0
 
 @pytest.mark.parametrize("task",
@@ -79,6 +82,7 @@ def test_classification_with_fs_cv(
         '--dataset={}'.format(traindata),
         '--fs_task={}'.format(fs),
         '--target_attribute={}'.format(target_attribute)])
+    print(result.output)
     assert result.exit_code == 0
 
 @pytest.mark.parametrize("task",
@@ -90,6 +94,7 @@ def test_clustering(task, traindata, testdata):
         task,
         '--dataset={}'.format(traindata),
         '--test={}'.format(testdata)])
+    print(result.output)
     assert result.exit_code == 0
 
 @pytest.mark.parametrize("task",
@@ -105,6 +110,7 @@ def test_clustering_with_fs(
         '--dataset={}'.format(traindata),
         '--fs_task={}'.format(fs),
         '--test={}'.format(testdata)])
+    print(result.output)
     assert result.exit_code == 0
 
 @pytest.mark.parametrize("task",
@@ -115,6 +121,7 @@ def test_clustering_cv(task, traindata):
     result = runner.invoke(cli.main, [
         task,
         '--dataset={}'.format(traindata)])
+    print(result.output)
     assert result.exit_code == 0
 
 @pytest.mark.parametrize("task",
@@ -129,4 +136,5 @@ def test_clustering_with_fs_cv(
         task,
         '--dataset={}'.format(traindata),
         '--fs_task={}'.format(fs)])
+    print(result.output)
     assert result.exit_code == 0
