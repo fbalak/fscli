@@ -39,7 +39,6 @@ def test_classification(task, traindata, target_attribute, testdata):
         '--test={}'.format(testdata)])
     assert result.exit_code == 0
 
-
 @pytest.mark.parametrize("task",
                          ["RandomForestClassifier", "SVC", "MultinomialNB"])
 @pytest.mark.parametrize("fs",
@@ -53,5 +52,31 @@ def test_classification_with_fs(
         '--dataset={}'.format(traindata),
         '--fs_task={}'.format(fs),
         '--target_attribute={}'.format(target_attribute),
+        '--test={}'.format(testdata)])
+    assert result.exit_code == 0
+
+@pytest.mark.parametrize("task",
+                         ["KMeans"])
+def test_clustering(task, traindata, testdata):
+    """Calls cli with specified machine learning tasks."""
+    runner = CliRunner()
+    result = runner.invoke(cli.main, [
+        task,
+        '--dataset={}'.format(traindata),
+        '--test={}'.format(testdata)])
+    assert result.output == 0
+
+@pytest.mark.parametrize("task",
+                         ["KMeans"])
+@pytest.mark.parametrize("fs",
+                         ["VarianceThreshold", "SelectFdr"])
+def test_clustering_with_fs(
+        task, fs, traindata, testdata):
+    """Calls cli with specified machine learning tasks."""
+    runner = CliRunner()
+    result = runner.invoke(cli.main, [
+        task,
+        '--dataset={}'.format(traindata),
+        '--fs_task={}'.format(fs),
         '--test={}'.format(testdata)])
     assert result.exit_code == 0
