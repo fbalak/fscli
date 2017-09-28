@@ -40,13 +40,18 @@ def test_classification(task, traindata, target_attribute, testdata):
     assert result.exit_code == 0
 
 
-def test_command_line_interface():
-    """Test the CLI."""
+@pytest.mark.parametrize("task",
+                         ["RandomForestClassifier", "SVC", "MultinomialNB"])
+@pytest.mark.parametrize("fs",
+                         ["VarianceThreshold", "SelectFdr"])
+def test_classification_with_fs(
+        task, fs, traindata, target_attribute, testdata):
+    """Calls cli with specified machine learning tasks."""
     runner = CliRunner()
-    result = runner.invoke(cli.main)
+    result = runner.invoke(cli.main, [
+        task,
+        '--dataset={}'.format(traindata),
+        '--fs_task={}'.format(fs),
+        '--target_attribute={}'.format(target_attribute),
+        '--test={}'.format(testdata)])
     assert result.exit_code == 0
-    assert 'fscli.cli.main' in result.output
-    help_result = runner.invoke(cli.main, ['--help'])
-    print(result.output)
-    assert help_result.exit_code == 0
-    assert '--help  Show this message and exit.' in help_result.output
