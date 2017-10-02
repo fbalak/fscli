@@ -118,8 +118,9 @@ def classification(source, model, target_att, test_source="", fs_task=False):
     results["metrics"] = metrics
     return results
 
+
 def clustering(source, model, target_att, test_source="", fs_task=False):
-    """Performs classification on given data.
+    """Performs clustering on given data.
 
     Params:
         source -- Path to the file that is used to train.
@@ -140,7 +141,7 @@ def clustering(source, model, target_att, test_source="", fs_task=False):
         "measures"])
     results["predictions"] = []
 
-    # Basic metrics used for classification and feature selection evaluation.
+    # Basic metrics used for clustering and feature selection evaluation.
     metrics = dict.fromkeys(["homogeneity", "f_measure"])
     metrics["homogeneity"] = []
     metrics["v_measure"] = []

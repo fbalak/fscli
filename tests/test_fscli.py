@@ -8,24 +8,28 @@ import os.path
 
 from click.testing import CliRunner
 
-from fscli import fscli
 from fscli import cli
 
 
 @pytest.fixture
 def traindata():
     """Returns training dataset used in tests."""
-    return os.path.join(os.path.dirname(os.path.realpath(__file__)), "testdata", "traindata")
+    return os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "testdata", "traindata")
+
 
 @pytest.fixture
 def testdata():
     """Returns testing dataset used in tests."""
-    return os.path.join(os.path.dirname(os.path.realpath(__file__)), "testdata", "testdata")
+    return os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "testdata", "testdata")
+
 
 @pytest.fixture
 def target_attribute():
     """Returns name of target attribute used in test datasets."""
     return "Class"
+
 
 @pytest.mark.parametrize("task",
                          ["RandomForestClassifier", "SVC", "MultinomialNB"])
@@ -39,6 +43,7 @@ def test_classification(task, traindata, target_attribute, testdata):
         '--test={}'.format(testdata)])
     print(result.output)
     assert result.exit_code == 0
+
 
 @pytest.mark.parametrize("task",
                          ["RandomForestClassifier", "SVC", "MultinomialNB"])
@@ -57,6 +62,7 @@ def test_classification_with_fs(
     print(result.output)
     assert result.exit_code == 0
 
+
 @pytest.mark.parametrize("task",
                          ["RandomForestClassifier", "SVC", "MultinomialNB"])
 def test_classification_cv(task, traindata, target_attribute):
@@ -68,6 +74,7 @@ def test_classification_cv(task, traindata, target_attribute):
         '--target_attribute={}'.format(target_attribute)])
     print(result.output)
     assert result.exit_code == 0
+
 
 @pytest.mark.parametrize("task",
                          ["RandomForestClassifier", "SVC", "MultinomialNB"])
@@ -85,6 +92,7 @@ def test_classification_with_fs_cv(
     print(result.output)
     assert result.exit_code == 0
 
+
 @pytest.mark.parametrize("task",
                          ["KMeans"])
 def test_clustering(task, traindata, target_attribute, testdata):
@@ -97,6 +105,7 @@ def test_clustering(task, traindata, target_attribute, testdata):
         '--test={}'.format(testdata)])
     print(result.output)
     assert result.exit_code == 0
+
 
 @pytest.mark.parametrize("task",
                          ["KMeans"])
@@ -115,6 +124,7 @@ def test_clustering_with_fs(
     print(result.output)
     assert result.exit_code == 0
 
+
 @pytest.mark.parametrize("task",
                          ["KMeans"])
 def test_clustering_cv(task, traindata, target_attribute):
@@ -126,6 +136,7 @@ def test_clustering_cv(task, traindata, target_attribute):
         '--dataset={}'.format(traindata)])
     print(result.output)
     assert result.exit_code == 0
+
 
 @pytest.mark.parametrize("task",
                          ["KMeans"])
