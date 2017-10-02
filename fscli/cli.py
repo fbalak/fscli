@@ -6,10 +6,16 @@ import sys
 import os
 from time import gmtime, strftime
 from sklearn.externals import joblib
-from fscli import machinelearning
+try:
+    from fscli import machinelearning
+except ImportError as err:
+    import machinelearning
 import click
 # Classification
-from fscli import coefbugrepair
+try:
+    from fscli import coefbugrepair
+except ImportError as err:
+    import coefbugrepair
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier

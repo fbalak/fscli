@@ -87,12 +87,13 @@ def test_classification_with_fs_cv(
 
 @pytest.mark.parametrize("task",
                          ["KMeans"])
-def test_clustering(task, traindata, testdata):
+def test_clustering(task, traindata, target_attribute, testdata):
     """Calls cli with specified machine learning tasks."""
     runner = CliRunner()
     result = runner.invoke(cli.main, [
         task,
         '--dataset={}'.format(traindata),
+        '--target_attribute={}'.format(target_attribute),
         '--test={}'.format(testdata)])
     print(result.output)
     assert result.exit_code == 0
@@ -102,12 +103,13 @@ def test_clustering(task, traindata, testdata):
 @pytest.mark.parametrize("fs",
                          ["VarianceThreshold", "SelectFdr"])
 def test_clustering_with_fs(
-        task, fs, traindata, testdata):
+        task, fs, traindata, testdata, target_attribute):
     """Calls cli with specified machine learning tasks."""
     runner = CliRunner()
     result = runner.invoke(cli.main, [
         task,
         '--dataset={}'.format(traindata),
+        '--target_attribute={}'.format(target_attribute),
         '--fs_task={}'.format(fs),
         '--test={}'.format(testdata)])
     print(result.output)
@@ -115,11 +117,12 @@ def test_clustering_with_fs(
 
 @pytest.mark.parametrize("task",
                          ["KMeans"])
-def test_clustering_cv(task, traindata):
+def test_clustering_cv(task, traindata, target_attribute):
     """Calls cli with specified machine learning tasks."""
     runner = CliRunner()
     result = runner.invoke(cli.main, [
         task,
+        '--target_attribute={}'.format(target_attribute),
         '--dataset={}'.format(traindata)])
     print(result.output)
     assert result.exit_code == 0
@@ -129,12 +132,13 @@ def test_clustering_cv(task, traindata):
 @pytest.mark.parametrize("fs",
                          ["VarianceThreshold", "SelectFdr"])
 def test_clustering_with_fs_cv(
-        task, fs, traindata):
+        task, fs, traindata, target_attribute):
     """Calls cli with specified machine learning tasks."""
     runner = CliRunner()
     result = runner.invoke(cli.main, [
         task,
         '--dataset={}'.format(traindata),
+        '--target_attribute={}'.format(target_attribute),
         '--fs_task={}'.format(fs)])
     print(result.output)
     assert result.exit_code == 0
