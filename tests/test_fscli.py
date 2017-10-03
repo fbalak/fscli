@@ -153,3 +153,65 @@ def test_clustering_with_fs_cv(
         '--fs_task={}'.format(fs)])
     print(result.output)
     assert result.exit_code == 0
+
+
+@pytest.mark.parametrize("task",
+                         ["LinearRegression", "Ridge", "Lasso"])
+def test_regression(task, traindata, target_attribute, testdata):
+    """Calls cli with specified machine learning tasks."""
+    runner = CliRunner()
+    result = runner.invoke(cli.main, [
+        task,
+        '--dataset={}'.format(traindata),
+        '--target_attribute={}'.format(target_attribute),
+        '--test={}'.format(testdata)])
+    print(result.output)
+    assert result.exit_code == 0
+
+
+@pytest.mark.parametrize("task",
+                         ["LinearRegression", "Ridge", "Lasso"])
+@pytest.mark.parametrize("fs",
+                         ["VarianceThreshold", "SelectFdr"])
+def test_regression_with_fs(
+        task, fs, traindata, target_attribute, testdata):
+    """Calls cli with specified machine learning tasks."""
+    runner = CliRunner()
+    result = runner.invoke(cli.main, [
+        task,
+        '--dataset={}'.format(traindata),
+        '--fs_task={}'.format(fs),
+        '--target_attribute={}'.format(target_attribute),
+        '--test={}'.format(testdata)])
+    print(result.output)
+    assert result.exit_code == 0
+
+
+@pytest.mark.parametrize("task",
+                         ["LinearRegression", "Ridge", "Lasso"])
+def test_regression_cv(task, traindata, target_attribute):
+    """Calls cli with specified machine learning tasks."""
+    runner = CliRunner()
+    result = runner.invoke(cli.main, [
+        task,
+        '--dataset={}'.format(traindata),
+        '--target_attribute={}'.format(target_attribute)])
+    print(result.output)
+    assert result.exit_code == 0
+
+
+@pytest.mark.parametrize("task",
+                         ["LinearRegression", "Ridge", "Lasso"])
+@pytest.mark.parametrize("fs",
+                         ["VarianceThreshold", "SelectFdr"])
+def test_regression_with_fs_cv(
+        task, fs, traindata, target_attribute):
+    """Calls cli with specified machine learning tasks."""
+    runner = CliRunner()
+    result = runner.invoke(cli.main, [
+        task,
+        '--dataset={}'.format(traindata),
+        '--fs_task={}'.format(fs),
+        '--target_attribute={}'.format(target_attribute)])
+    print(result.output)
+    assert result.exit_code == 0

@@ -25,6 +25,7 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis,\
 # Clustering
 from sklearn import cluster
 from sklearn import mixture
+from sklearn import linear_model
 import numpy as np
 np.set_printoptions(threshold=np.inf)
 
@@ -102,6 +103,16 @@ def main(task, dataset, target_attribute, fs_task, test, model, save_folder):
         elif task == "Gaussian":
             tasktype = "clustering"
             model = mixture.GMM(n_components=2, covariance_type='full')
+        # regression
+        elif task == "LinearRegression":
+            tasktype = "regression"
+            model = linear_model.LinearRegression()
+        elif task == "Ridge":
+            tasktype = "regression"
+            model = linear_model.Ridge()
+        elif task == "Lasso":
+            tasktype = "regression"
+            model = linear_model.Lasso()
 
     if model is not None:
         if tasktype == "classification":
@@ -113,6 +124,9 @@ def main(task, dataset, target_attribute, fs_task, test, model, save_folder):
                 dataset, model, target_attribute, test, fs_task)
         elif tasktype == "clustering":
             results = machinelearning.clustering(
+                dataset, model, target_attribute, test, fs_task)
+        elif tasktype == "regression":
+            results = machinelearning.regression(
                 dataset, model, target_attribute, test, fs_task)
 
         click.echo("Results")
