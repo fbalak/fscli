@@ -77,9 +77,10 @@ def test_classification_cv(task, traindata, target_attribute):
 
 
 @pytest.mark.parametrize("task",
-                         ["RandomForestClassifier", "SVC", "MultinomialNB"])
-@pytest.mark.parametrize("fs",
-                         ["VarianceThreshold", "SelectFdr"])
+                         ["RandomForestClassifier", "MultinomialNB"])
+@pytest.mark.parametrize(
+    "fs",
+    ["VarianceThreshold", "SelectFdr", "fromModel", "RFE"])
 def test_classification_with_fs_cv(
         task, fs, traindata, target_attribute):
     """Calls cli with specified machine learning tasks."""

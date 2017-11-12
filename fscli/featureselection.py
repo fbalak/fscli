@@ -9,24 +9,23 @@ def get_selected_features(model, features):
     """Estimates support of given fitted model and compares it to given list
     of features. Returns list of features selected through feature selection.
     """
-    support = model.get_support()
-    # Different methods use different ways to get support.
     try:
-        support = model.support_
+        support = model.get_support()
     except:
+        # Different methods use different ways to get support.
         try:
-            support = model.get_support()
+            support = model.support_
         except:
-            # The transform function is computed from attribute coef_
-            # for linearSVC, where coef_ must be greater than mean(coef)
-            # http://scikit-learn.org/stable/modules/generated/\
-            # sklearn.svm.LinearSVC.html
             try:
                 support = [True if i >= np.mean(model.coef_[0])
                            else False for i in model.coef_[0]]
-            except AttributeError as err:
-                print("Attribute error:{0}".format(err))
-                sys.exit(0)
+            except:
+                try:
+                    support = model.named_steps[
+                        "feature_selection"].get_support()
+                except AttributeError as err:
+                    print("Attribute error:{0}".format(err))
+                    sys.exit(1)
     if support is not None:
         for idx, val in enumerate(support):
             if not val:
@@ -58,16 +57,16 @@ def get_fs_model(model, method, train, target=None, cv=None):
             ('data_mining', model)
         ])
     elif method == "fromModel":
+        fm = fs_scikit.SelectFromModel(model)
         if target is not None:
-            fs = fs_scikit.SelectFromModel(model)
-            fs.fit(train, target)
-            fs.estimator_.support_ = fs.get_support()
-            return fs.estimator_
+            fm.fit(train, target)
         else:
-            fs = fs_scikit.SelectFromModel(model)
-            fs.fit(train)
-            fs.estimator_.support_ = fs.get_support()
-            return fs.estimator_
+            fm.fit(train)
+        model = Pipeline([
+            ('feature_selection', fm),
+            ('data_mining', model)
+        ])
+
     # elif method == "Anova":
         # ANOVA SVM-C
         # anova_filter = fs_scikit.SelectKBest(f_regression, k=5)
