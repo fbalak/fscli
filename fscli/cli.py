@@ -6,6 +6,8 @@ import sys
 import os
 from time import gmtime, strftime
 from sklearn.externals import joblib
+from sklearn.utils.validation import check_is_fitted
+from sklearn.exceptions import NotFittedError
 try:
     from fscli import machinelearning
 except ImportError as err:
@@ -40,7 +42,16 @@ np.set_printoptions(threshold=np.inf)
 @click.option('--model', '-m', help='Trained model.')
 @click.option('--save_folder', '-s',
               help='Path to folder where to save trained model.')
-def main(task, dataset, target_attribute, fs_task, test, model, save_folder):
+@click.option('--predict_data', '-p',
+              help='Data that are going to be predicted.')
+def main(
+        task,
+        dataset,
+        target_attribute,
+        fs_task,
+        test, model,
+        save_folder,
+        predict_data):
     """Console script for fscli."""
     if model is None:
         # Classification
@@ -115,39 +126,50 @@ def main(task, dataset, target_attribute, fs_task, test, model, save_folder):
             model = linear_model.Lasso()
 
     if model is not None:
-        if tasktype == "classification":
-            if target_attribute is None:
-                click.echo("For classification task have to be specified"
-                           "--target_attribute")
-                sys.exit(1)
-            results = machinelearning.classification(
-                dataset, model, target_attribute, test, fs_task)
-        elif tasktype == "clustering":
-            results = machinelearning.clustering(
-                dataset, model, target_attribute, test, fs_task)
-        elif tasktype == "regression":
-            results = machinelearning.regression(
-                dataset, model, target_attribute, test, fs_task)
+        try:
+            check_is_fitted(
+                estimator=model,
+                attributes=("coef_", "estimator_"),
+                all_or_any=any)
+        except NotFittedError as err:
+            if tasktype == "classification":
+                if target_attribute is None:
+                    click.echo("For classification task there have to be"
+                               "specified --target_attribute")
+                    sys.exit(1)
+                results = machinelearning.classification(
+                    dataset, model, target_attribute, test, fs_task)
+            elif tasktype == "clustering":
+                results = machinelearning.clustering(
+                    dataset, model, target_attribute, test, fs_task)
+            elif tasktype == "regression":
+                results = machinelearning.regression(
+                    dataset, model, target_attribute, test, fs_task)
 
-        click.echo("Results")
-        click.echo(results["score"])
-        click.echo(results["metrics"])
-        if fs_task:
-            click.echo("feature selection: {}".format(fs_task))
-            click.echo("removed_features: {}".format(
-                results["removed_features"]))
+            click.echo("Results")
+            click.echo(results["score"])
+            click.echo(results["metrics"])
+            if fs_task:
+                click.echo("feature selection: {}".format(fs_task))
+                click.echo("removed_features: {}".format(
+                    results["removed_features"]))
 
-        if save_folder:
-            if save_folder != "":
-                directory = save_folder
-            else:
-                directory = '../models/model'+str(
-                    strftime("%Y-%m-%d-%H-%M-%S", gmtime()))
-            if not os.path.exists(directory):
-                os.makedirs(directory)
-            joblib.dump(results["model"], directory+'/model.pkl')
-            click.echo(
-                "Dump file of model was created: " + directory+'/model.pkl')
+            if save_folder:
+                if save_folder != "":
+                    directory = save_folder
+                else:
+                    directory = '../models/model'+str(
+                        strftime("%Y-%m-%d-%H-%M-%S", gmtime()))
+                if not os.path.exists(directory):
+                    os.makedirs(directory)
+                joblib.dump(results["model"], directory+'/model.pkl')
+                click.echo(
+                    "Dump file of model was created: "
+                    + directory + '/model.pkl')
+
+        if predict_data:
+            click.echo("Predicted results:")
+            click.echo(model.predict(predict_data))
 
         return results
 
