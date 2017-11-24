@@ -144,6 +144,8 @@ def clustering(source, model, target_att, test_source="", fs_task=False):
     # Basic metrics used for clustering and feature selection evaluation.
     metrics = dict.fromkeys(["homogeneity", "f_measure"])
     metrics["homogeneity"] = []
+    metrics["completeness"] = []
+    metrics["fowlkes"] = []
     metrics["v_measure"] = []
     results["removed_features"] = []
     results["selected_features"] = []
@@ -185,6 +187,10 @@ def clustering(source, model, target_att, test_source="", fs_task=False):
         results["predictions"].append(prediction)
         metrics["homogeneity"].append(
             mx.homogeneity_score(test_target, prediction))
+        metrics["completeness"].append(
+            mx.completeness_score(test_target, prediction))
+        metrics["fowlkes"].append(
+            mx.fowlkes_mallows_score(test_target, prediction))
         metrics["v_measure"].append(
             mx.v_measure_score(test_target, prediction))
     else:
@@ -195,6 +201,10 @@ def clustering(source, model, target_att, test_source="", fs_task=False):
             results["predictions"].append(prediction)
             metrics["homogeneity"].append(
                 mx.homogeneity_score(target[test_idx], prediction))
+            metrics["completeness"].append(
+                mx.completeness_score(target[test_idx], prediction))
+            metrics["fowlkes"].append(
+                mx.fowlkes_mallows_score(target[test_idx], prediction))
             metrics["v_measure"].append(
                 mx.v_measure_score(target[test_idx], prediction))
     # results["score"] = cfr.score(test, test_target)
