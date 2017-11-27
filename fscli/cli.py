@@ -13,6 +13,7 @@ try:
 except ImportError as err:
     import machinelearning
 import click
+import json
 # Classification
 try:
     from fscli import coefbugrepair
@@ -165,9 +166,10 @@ def main(
                     click.echo("removed_features: {}".format(
                         results["results"]["removed_features"]))
                 results["results"]["removed_features_num"] = len(
-                    results["results"]["removed_features"])
+                    results["results"]["removed_features"][0])
                 results["metadata"]["feature_selection"] = fs_task
 
+            fitted_model = results['results'].pop('model', None)
             if save_folder:
                 if save_folder != "":
                     directory = save_folder
@@ -176,7 +178,7 @@ def main(
                         strftime("%Y-%m-%d-%H-%M-%S", gmtime()))
                 if not os.path.exists(directory):
                     os.makedirs(directory)
-                joblib.dump(results["model"], directory+'/model.pkl')
+                joblib.dump(fitted_model, directory+'/model.pkl')
                 click.echo(
                     "Dump file of model was created: "
                     + directory + '/model.pkl')
@@ -187,7 +189,7 @@ def main(
 
         results["metadata"]["end_time"] = strftime(
             "%Y-%m-%d %H:%M:%S", gmtime())
-        click.echo(results)
+        click.echo(json.dumps(results))
         return results
 
     else:

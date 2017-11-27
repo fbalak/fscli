@@ -21,7 +21,6 @@ def classification(source, model, target_att, test_source="", fs_task=False):
     results = dict.fromkeys([
         "score",
         "model",
-        "features",
         "removed_features",
         "selected_features",
         "feature_importances",
@@ -34,7 +33,6 @@ def classification(source, model, target_att, test_source="", fs_task=False):
     metrics["precision"] = []
     metrics["f_measure"] = []
     results["removed_features"] = []
-    results["selected_features"] = []
     results["feature_importances"] = []
 
     cfr = model
@@ -107,7 +105,6 @@ def classification(source, model, target_att, test_source="", fs_task=False):
                 cfr.named_steps["feature_selection"], original_features)
         removed_features = [i for i in features if i not in selected_features]
         results["removed_features"].append(removed_features)
-        results["selected_features"].append(selected_features)
 
     results["model"] = cfr
     results["metrics"] = metrics
@@ -128,7 +125,6 @@ def clustering(source, model, target_att, test_source="", fs_task=False):
     results = dict.fromkeys([
         "score",
         "model",
-        "features",
         "removed_features",
         "selected_features",
         "feature_importances",
@@ -142,7 +138,6 @@ def clustering(source, model, target_att, test_source="", fs_task=False):
     metrics["fowlkes"] = []
     metrics["v_measure"] = []
     results["removed_features"] = []
-    results["selected_features"] = []
     results["feature_importances"] = []
 
     cfr = model
@@ -213,7 +208,6 @@ def clustering(source, model, target_att, test_source="", fs_task=False):
                 cfr.named_steps["feature_selection"], original_features)
         removed_features = [i for i in features if i not in selected_features]
         results["removed_features"].append(removed_features)
-        results["selected_features"].append(selected_features)
 
     results["model"] = cfr
     results["metrics"] = metrics
@@ -234,7 +228,6 @@ def regression(source, model, target_att, test_source="", fs_task=False):
     results = dict.fromkeys([
         "score",
         "model",
-        "features",
         "removed_features",
         "selected_features",
         "feature_importances",
@@ -252,7 +245,6 @@ def regression(source, model, target_att, test_source="", fs_task=False):
     metrics["r2"] = []
     metrics["neg_median_absolute_error"] = []
     results["removed_features"] = []
-    results["selected_features"] = []
     results["feature_importances"] = []
 
     cfr = model
@@ -331,7 +323,6 @@ def regression(source, model, target_att, test_source="", fs_task=False):
                 cfr.named_steps["feature_selection"], original_features)
         removed_features = [i for i in features if i not in selected_features]
         results["removed_features"].append(removed_features)
-        results["selected_features"].append(selected_features)
 
     results["model"] = cfr
     results["metrics"] = metrics
