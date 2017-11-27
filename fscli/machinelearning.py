@@ -19,7 +19,6 @@ def classification(source, model, target_att, test_source="", fs_task=False):
     """
 
     results = dict.fromkeys([
-        "predictions",
         "score",
         "model",
         "features",
@@ -27,7 +26,6 @@ def classification(source, model, target_att, test_source="", fs_task=False):
         "selected_features",
         "feature_importances",
         "measures"])
-    results["predictions"] = []
 
     # Basic metrics used for classification and feature selection evaluation.
     metrics = dict.fromkeys(["accuracy", "recall", "precision", "f_measure"])
@@ -71,7 +69,6 @@ def classification(source, model, target_att, test_source="", fs_task=False):
 
         cfr.fit(train, target)
         prediction = cfr.predict(test)
-        results["predictions"].append(prediction)
         metrics["accuracy"].append(mx.accuracy_score(test_target, prediction))
         metrics["precision"].append(
             mx.precision_score(test_target, prediction, average="macro"))
@@ -84,7 +81,6 @@ def classification(source, model, target_att, test_source="", fs_task=False):
         for train_idx, test_idx in cv.split(train):
             cfr.fit(train[train_idx], target[train_idx])
             prediction = cfr.predict(train[test_idx])
-            results["predictions"].append(prediction)
             metrics["accuracy"].append(
                 mx.accuracy_score(target[test_idx], prediction))
             metrics["precision"].append(
@@ -130,7 +126,6 @@ def clustering(source, model, target_att, test_source="", fs_task=False):
     """
 
     results = dict.fromkeys([
-        "predictions",
         "score",
         "model",
         "features",
@@ -138,7 +133,6 @@ def clustering(source, model, target_att, test_source="", fs_task=False):
         "selected_features",
         "feature_importances",
         "measures"])
-    results["predictions"] = []
 
     # Basic metrics used for clustering and feature selection evaluation.
     metrics = dict.fromkeys(["homogeneity", "completeness", "fowlkes",
@@ -183,7 +177,6 @@ def clustering(source, model, target_att, test_source="", fs_task=False):
 
         cfr.fit(train, target)
         prediction = cfr.predict(test)
-        results["predictions"].append(prediction)
         metrics["homogeneity"].append(
             mx.homogeneity_score(test_target, prediction))
         metrics["completeness"].append(
@@ -197,7 +190,6 @@ def clustering(source, model, target_att, test_source="", fs_task=False):
         for train_idx, test_idx in cv.split(train):
             cfr.fit(train[train_idx], target[train_idx])
             prediction = cfr.predict(train[test_idx])
-            results["predictions"].append(prediction)
             metrics["homogeneity"].append(
                 mx.homogeneity_score(target[test_idx], prediction))
             metrics["completeness"].append(
@@ -240,7 +232,6 @@ def regression(source, model, target_att, test_source="", fs_task=False):
     """
 
     results = dict.fromkeys([
-        "predictions",
         "score",
         "model",
         "features",
@@ -248,7 +239,6 @@ def regression(source, model, target_att, test_source="", fs_task=False):
         "selected_features",
         "feature_importances",
         "measures"])
-    results["predictions"] = []
 
     # Basic metrics used for regression and feature selection evaluation.
     metrics = dict.fromkeys(
@@ -297,7 +287,6 @@ def regression(source, model, target_att, test_source="", fs_task=False):
 
         cfr.fit(train, target)
         prediction = cfr.predict(test)
-        results["predictions"].append(prediction)
         metrics["explained_variance"].append(
             mx.explained_variance_score(test_target, prediction))
         metrics["neg_mean_absolute_error"].append(
@@ -315,7 +304,6 @@ def regression(source, model, target_att, test_source="", fs_task=False):
         for train_idx, test_idx in cv.split(train):
             cfr.fit(train[train_idx], target[train_idx])
             prediction = cfr.predict(train[test_idx])
-            results["predictions"].append(prediction)
             metrics["explained_variance"].append(
                 mx.explained_variance_score(target[test_idx], prediction))
             metrics["neg_mean_absolute_error"].append(
