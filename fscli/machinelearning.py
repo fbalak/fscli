@@ -40,7 +40,6 @@ def classification(source, model, target_att, test_source="", fs_task=False):
     results["feature_importances"] = []
 
     cfr = model
-    print(model)
 
     # Object for reading train data and test data
     csv = pd.read_csv(source)
@@ -142,7 +141,8 @@ def clustering(source, model, target_att, test_source="", fs_task=False):
     results["predictions"] = []
 
     # Basic metrics used for clustering and feature selection evaluation.
-    metrics = dict.fromkeys(["homogeneity", "f_measure"])
+    metrics = dict.fromkeys(["homogeneity", "completeness", "fowlkes",
+                             "v_measure"])
     metrics["homogeneity"] = []
     metrics["completeness"] = []
     metrics["fowlkes"] = []
@@ -152,7 +152,6 @@ def clustering(source, model, target_att, test_source="", fs_task=False):
     results["feature_importances"] = []
 
     cfr = model
-    print(model)
 
     # Object for reading train data and test data
     csv = pd.read_csv(source)
@@ -267,7 +266,6 @@ def regression(source, model, target_att, test_source="", fs_task=False):
     results["feature_importances"] = []
 
     cfr = model
-    print(model)
 
     # Object for reading train data and test data
     csv = pd.read_csv(source)

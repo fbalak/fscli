@@ -44,6 +44,7 @@ np.set_printoptions(threshold=np.inf)
               help='Path to folder where to save trained model.')
 @click.option('--predict_data', '-p',
               help='Data that are going to be predicted.')
+@click.option('--verbose', '-v', is_flag=True, help='Verbose mode.')
 def main(
         task,
         dataset,
@@ -51,7 +52,8 @@ def main(
         fs_task,
         test, model,
         save_folder,
-        predict_data):
+        predict_data,
+        verbose):
     """Console script for fscli."""
     if model is None:
         # Classification
@@ -126,6 +128,13 @@ def main(
             model = linear_model.Lasso()
 
     if model is not None:
+        results = {
+            "metadata": {
+                "task": task,
+                "type": tasktype,
+                "feature_selection": None}}
+        results["metadata"]["start_time"] = strftime(
+            "%Y-%m-%d %H:%M:%S", gmtime())
         try:
             check_is_fitted(
                 estimator=model,
@@ -137,22 +146,27 @@ def main(
                     click.echo("For classification task there have to be"
                                "specified --target_attribute")
                     sys.exit(1)
-                results = machinelearning.classification(
+                results["results"] = machinelearning.classification(
                     dataset, model, target_attribute, test, fs_task)
             elif tasktype == "clustering":
-                results = machinelearning.clustering(
+                results["results"] = machinelearning.clustering(
                     dataset, model, target_attribute, test, fs_task)
             elif tasktype == "regression":
-                results = machinelearning.regression(
+                results["results"] = machinelearning.regression(
                     dataset, model, target_attribute, test, fs_task)
 
-            click.echo("Results")
-            click.echo(results["score"])
-            click.echo(results["metrics"])
+            if verbose:
+                click.echo("Results")
+                click.echo(results["results"]["score"])
+                click.echo(results["results"]["metrics"])
             if fs_task:
-                click.echo("feature selection: {}".format(fs_task))
-                click.echo("removed_features: {}".format(
-                    results["removed_features"]))
+                if verbose:
+                    click.echo("feature selection: {}".format(fs_task))
+                    click.echo("removed_features: {}".format(
+                        results["results"]["removed_features"]))
+                results["results"]["removed_features_num"] = len(
+                    results["results"]["removed_features"])
+                results["metadata"]["feature_selection"] = fs_task
 
             if save_folder:
                 if save_folder != "":
@@ -167,10 +181,13 @@ def main(
                     "Dump file of model was created: "
                     + directory + '/model.pkl')
 
-        if predict_data:
+        if predict_data and verbose:
             click.echo("Predicted results:")
             click.echo(model.predict(predict_data))
 
+        results["metadata"]["end_time"] = strftime(
+            "%Y-%m-%d %H:%M:%S", gmtime())
+        click.echo(results)
         return results
 
     else:
