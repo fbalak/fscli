@@ -60,7 +60,9 @@ def main(
         # Classification
         if task == "RandomForestClassifier":
             tasktype = "classification"
-            model = RandomForestClassifier(n_estimators=10)
+#            model = RandomForestClassifier(n_estimators=10)
+            model = RandomForestClassifier(
+                n_estimators=30, criterion="entropy", min_samples_split=10)
         elif task == "KNeighborsClassifier":
             tasktype = "classification"
             model = KNeighborsClassifier(20)
@@ -88,7 +90,7 @@ def main(
             # http://stats.stackexchange.com/questions/33185/\
             # difference-between-naive-bayes-multinomial-naive-bayes
             tasktype = "classification"
-            model = MultinomialNB()
+            model = MultinomialNB(alpha=2)
         elif task == "QDA":
             tasktype = "classification"
             model = QuadraticDiscriminantAnalysis()
