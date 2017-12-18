@@ -1,5 +1,6 @@
 from sklearn.svm import LinearSVC
 import sklearn.feature_selection as fs_scikit
+from sklearn.feature_selection import SelectFromModel
 import sys
 from sklearn.pipeline import Pipeline
 import numpy as np
@@ -51,7 +52,7 @@ def get_fs_model(model, method, train, target=None, cv=None):
         else:
             return model.fit(train)
     elif method == "linearSVC":
-        sel = LinearSVC(loss='l2', penalty='l1', dual=False)
+        sel = SelectFromModel(LinearSVC(loss='l2', penalty='l1', dual=False))
         model = Pipeline([
             ('feature_selection', sel),
             ('data_mining', model)
@@ -81,7 +82,7 @@ def get_fs_model(model, method, train, target=None, cv=None):
             ('data_mining', model)
         ])
     elif method == "SelectPercentile":
-        sel = fs_scikit.SelectPercentile(fs_scikit.f_classif, percentile=50)
+        sel = fs_scikit.SelectPercentile(fs_scikit.f_classif, percentile=10)
         model = Pipeline([
             ('feature_selection', sel),
             ('data_mining', model)
