@@ -129,12 +129,15 @@ def main(
         elif task == "Lasso":
             tasktype = "regression"
             model = linear_model.Lasso()
+    else:
+        tasktype = "classification"
+        model = joblib.load(model)
 
     if model is not None:
         results = {
             "metadata": {
                 "task": task,
-                "type": tasktype,
+                "tasktype": tasktype,
                 "feature_selection": None}}
         results["metadata"]["start_time"] = strftime(
             "%Y-%m-%d %H:%M:%S", gmtime())
