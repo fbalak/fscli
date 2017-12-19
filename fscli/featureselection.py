@@ -40,7 +40,7 @@ def get_fs_model(model, method, train, target=None, cv=None):
     the final structure.
     """
     if method == "RFE":
-        model = fs_scikit.RFE(model, 5, step=3)
+        model = fs_scikit.RFE(model, 2, step=5)
         if target is not None:
             return model.fit(train, target)
         else:
@@ -52,7 +52,7 @@ def get_fs_model(model, method, train, target=None, cv=None):
         else:
             return model.fit(train)
     elif method == "linearSVC":
-        sel = SelectFromModel(LinearSVC(loss='l2', penalty='l1', dual=False))
+        sel = SelectFromModel(LinearSVC(penalty='l1', dual=False))
         model = Pipeline([
             ('feature_selection', sel),
             ('data_mining', model)
@@ -82,25 +82,25 @@ def get_fs_model(model, method, train, target=None, cv=None):
             ('data_mining', model)
         ])
     elif method == "SelectPercentile":
-        sel = fs_scikit.SelectPercentile(fs_scikit.f_classif, percentile=10)
+        sel = fs_scikit.SelectPercentile(fs_scikit.f_classif, percentile=30)
         model = Pipeline([
             ('feature_selection', sel),
             ('data_mining', model)
         ])
     elif method == "SelectFpr":
-        sel = fs_scikit.SelectFpr(alpha=0.1)
+        sel = fs_scikit.SelectFpr(alpha=0.2)
         model = Pipeline([
             ('feature_selection', sel),
             ('data_mining', model)
         ])
     elif method == "SelectFdr":
-        sel = fs_scikit.SelectFdr(alpha=0.1)
+        sel = fs_scikit.SelectFdr(alpha=0.2)
         model = Pipeline([
             ('feature_selection', sel),
             ('data_mining', model)
         ])
     elif method == "SelectFwe":
-        sel = fs_scikit.SelectFwe(alpha=0.1)
+        sel = fs_scikit.SelectFwe(alpha=0.2)
         model = Pipeline([
             ('feature_selection', sel),
             ('data_mining', model)
